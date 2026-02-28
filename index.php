@@ -1,10 +1,10 @@
 <?php
 include_once('config.php');
 session_start();
-session_destroy();
+
 $texto = "";
 $imagem = "./img/foto-padrao.jpg";
- $caminho = "";
+$caminho = "";
 if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
     $ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
     $nome_arquivo = uniqid() . '.' . $ext;
@@ -13,9 +13,9 @@ if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
     if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
 
 
-    
-    
-        $stmt = $conexao->prepare("UPDATE melhores SET img_perfil = ? WHERE nm_nome = ? LIMIT 1" );
+
+
+        $stmt = $conexao->prepare("UPDATE melhores SET img_perfil = ? WHERE nm_nome = ? LIMIT 1");
         $stmt->bind_param("ss", $caminho, $_SESSION['nome']);
         $stmt->execute();
         $stmt->close();
@@ -45,19 +45,23 @@ if (isset($_POST['noe'])) {
     $nome = $_SESSION['nome'];
 
 
-    $pesquisa = "SELECT * FROM Melhores WHERE nm_nome='$nome' ";
+    $pesquisa = "SELECT * FROM melhores WHERE nm_nome='$nome' ";
     $nomeprocurar = $conexao->query($pesquisa);
-if($nome===""){
-     $texto = "<div class='erro'><p>Este nome já esta em uso</p></div>";
-}
-    else if (mysqli_num_rows($nomeprocurar) >= 1 ) {
-         $texto = "<div class='erro'><p>Este nome já esta em uso</p></div>";
+    if ($nome === "") {
+        $texto = "<div class='erro'><p>Este nome já esta em uso</p></div>";
+    } else if (mysqli_num_rows($nomeprocurar) >= 1) {
+        $texto = "<div class='erro'><p>Este nome já esta em uso</p></div>";
 
-    } else  {
-      
- $stmt = $conexao->prepare("INSERT INTO Melhores(nm_nome, img_perfil) VALUES (?, ?)");
+    } else {
+
+        $stmt = $conexao->prepare("INSERT INTO Melhores(nm_nome, img_perfil) VALUES (?, ?)");
         $stmt->bind_param("ss", $nome, $imagem);
         $stmt->execute();
+
+        $_SESSION['nome'] = $_POST['nome'];
+
+        $nome = $_SESSION['nome'];
+        $_SESSION['teste'] = 1;
         header('location:quiz.php');
     }
 
@@ -69,7 +73,7 @@ if($nome===""){
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Quiz</title>
     <style>
         body {
             align-items: center;
@@ -257,6 +261,81 @@ if($nome===""){
                 transform: translateY(0px);
             }
 
+
+        }
+
+        @media (max-width: 500px) {
+
+
+            label {
+                font-size: 20px;
+            }
+
+            .foto {
+                width: 100px !important;
+                height: 100px !important;
+
+                border: 3px solid #000;
+                border-radius: 50px;
+
+            }
+
+
+
+            .todo {
+                width: 75%;
+                background: white;
+                padding: 30px;
+                border-radius: 12px;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                align-items: center;
+            }
+
+
+
+
+
+
+            .foto {
+                border-radius: 100%;
+
+                border: 2px solid #000000;
+                transition: opacity 0.3s ease;
+
+                width: 100px;
+                height: 100px;
+
+
+            }
+
+
+
+            .overlay {
+                position: absolute;
+                top: 0px;
+                left: 0;
+                border-radius: 100%;
+
+                border: 2px solid #000000;
+                transition: opacity 0.3s ease;
+
+                width: 100px;
+                height: 100px;
+
+                background-color: rgba(0, 0, 0, 0.5);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                opacity: 0;
+                transition: opacity 0.3s ease;
+                pointer-events: none;
+            }
+
+
+
+
         }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
@@ -271,7 +350,7 @@ if($nome===""){
                 <img class="foto" id="foto-perfil" src="<?php echo htmlspecialchars($imagem); ?>" alt="Foto de perfil">
 
                 <form action="" method="post" enctype="multipart/form-data" id="form-foto">
-                
+
                     <label for="input-foto" class="overlay-label"></label>
 
                     <div class="overlay">
@@ -282,7 +361,7 @@ if($nome===""){
                         </svg>
                     </div>
 
-                   
+
                     <input type="file" name="imagem" id="input-foto" accept="image/*">
 
                 </form>
@@ -292,7 +371,7 @@ if($nome===""){
 
         <div class="form-group nome">
             <form action="" method="post">
-                <label>Digite seu Nome(não precisa ser o real)</label>
+                <label>Digite seu Nome (não precisa ser o real)</label>
                 <input class="form-control" name="nome" type="text" maxlength="20" required>
                 <button name="noe" class="botao" type="submit">Começar</button>
             </form>
