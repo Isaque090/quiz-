@@ -85,10 +85,11 @@ $perguntas = [
 if ($_SESSION['pergunta_atual'] >= count($perguntas)) {
 
     $nome = $_SESSION['nome'];
-    $pontos = $_SESSION['certas'] ;
+    $pontos = $_SESSION['certas']*10 ;
+
     include_once('config.php');
-    $stmt = $conexao->prepare("fUPDATE Melhores SET nome = '$pontos' WHERE email = '$logado'");
-$stmt->bind_param("si", $nome, $pontos);  
+    $stmt = $conexao->prepare("UPDATE Melhores SET pontuacao= ? WHERE nm_nome = ?");
+$stmt->bind_param("is",  $pontos,$nome);  
 $stmt->execute();
     echo "<h2 style='color: green;'> " . $_SESSION['certas'] . "Quiz finalizado! Você respondeu todas as " . count($perguntas) . " perguntas.</h2>";
     $p = "";
@@ -122,7 +123,8 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
 
 ?><!DOCTYPE html>
 <html lang="pt-br">
-
+ <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -141,8 +143,8 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
         }
 
         .todo {
-            width: 100%;
-            max-width: 500px;
+            width: 100% !important;
+            max-width: 650px !important;
             background: white;
             padding: 30px;
             border-radius: 12px;
