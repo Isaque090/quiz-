@@ -84,18 +84,17 @@ $perguntas = [
 
 if ($_SESSION['pergunta_atual'] >= count($perguntas)) {
 
-    $nome = $_SESSION['nome'];
+$_SESSION['nome'];
     $pontos = $_SESSION['certas']*10 ;
 
     include_once('config.php');
-    $stmt = $conexao->prepare("UPDATE Melhores SET pontuacao= ? WHERE nm_nome = ?");
-$stmt->bind_param("is",  $pontos,$nome);  
+    $stmt = $conexao->prepare("UPDATE melhores SET pontuacao= ? WHERE nm_nome = ?");
+$stmt->bind_param("is",  $pontos,$_SESSION['nome']);  
 $stmt->execute();
     echo "<h2 style='color: green;'> " . $_SESSION['certas'] . "Quiz finalizado! Você respondeu todas as " . count($perguntas) . " perguntas.</h2>";
     $p = "";
 
-    
-session_destroy();
+ $_SESSION['pergunta_atual'] = 0;
 
     exit;
 }
