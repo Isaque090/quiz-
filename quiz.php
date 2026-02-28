@@ -1,5 +1,7 @@
 <?php
+include_once('config.php');
 session_start();
+
 
 if (!isset($_SESSION['pergunta_atual'])) {
     $_SESSION['pergunta_atual'] = 0;
@@ -9,6 +11,13 @@ if (!isset($_SESSION['pergunta_atual'])) {
 if (!isset($_SESSION['certas'])) {
     $_SESSION['certas'] = 0;
 }
+
+  
+
+     if ( $_SESSION['teste'] === 0 ) {
+          header('location:index.php');  
+
+    } 
 
 
 
@@ -87,14 +96,124 @@ if ($_SESSION['pergunta_atual'] >= count($perguntas)) {
 $_SESSION['nome'];
     $pontos = $_SESSION['certas']*10 ;
 
-    include_once('config.php');
+    
     $stmt = $conexao->prepare("UPDATE melhores SET pontuacao= ? WHERE nm_nome = ?");
 $stmt->bind_param("is",  $pontos,$_SESSION['nome']);  
 $stmt->execute();
-    echo "<h2 style='color: green;'> " . $_SESSION['certas'] . "Quiz finalizado! Você respondeu todas as " . count($perguntas) . " perguntas.</h2>";
-    $p = "";
+    echo "    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>Quiz Simples</title>
+ <link rel='stylesheet' href='https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css'
+        integrity='sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T' crossorigin='anonymous'>   <style>       .botao:hover {
+             color: #0b0b0b !important;
+           background-color: #2224a5;
+  
+      box-shadow: 0 8px 20px rgba(99, 102, 241, 0.35);
+        }
 
+        .botao:active {
+            background-color: #1f6391;
+        }
+
+        .botao {
+            display: block;
+            width: 30%;
+            margin: 12px 0;
+            padding: 16px;
+            font-size: 19px;
+            background-color: #3437db;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.7s;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+            color: #fff !important;
+            text-align: center;
+            font-weight: 600;
+
+        }
+       
+        body {
+
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .todo {
+            width: 100% !important;
+            max-width: 650px !important;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none !important;
+        }
+        p{
+            color: #64748b;
+            font-size: 20px;
+        }
+        h1{
+            color:#129167;
+        }
+        .mostrar{
+            width:90%;
+            height: 100px;
+         background: rgba(99, 102, 241, 0.08);
+      border: 2px solid #0c2fbe;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: center;
+
+        }
+        @media (max-width:768px) {
+            h1{
+           font-size:2.2rem !important;
+        } 
+        p{
+            font-size:1.4rem !important;
+        }
+        .botao{
+            
+            width: 50%;
+
+        }
+        }
+   </style>
+   <div class='card todo'>
+        <div class='card-body'>
+            <h1>Quiz Finalizado!</h1>
+            <p>Você respondeu todas as perguntas</p> 
+            <div class='mostrar'>
+                <div>
+                <H3 style='color: #007d9f;margin-top:-10px;'>Pontos:</H3>
+                <h4>$pontos</h4>
+                </div>
+            </div>
+            <a href='rank.php' class='botao'>Ver Rank</a>
+        </div>
+    </div> ";
+    $p = "";
+ $testevariavel=1;
  $_SESSION['pergunta_atual'] = 0;
+ $_SESSION['teste'] = 0;
+    $_SESSION['certas'] = 0;
+
 
     exit;
 }
@@ -105,7 +224,7 @@ $p = $perguntas[$conta];
 if (isset($_POST['escolha'])) {
 
     $a = $_POST['escolha'];
-    echo $a;
+    
     if ($a == $p['correta']) {
         echo 'certo';
         $_SESSION['certas'] += 1;
@@ -122,9 +241,10 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
 
 ?><!DOCTYPE html>
 <html lang="pt-br">
- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
-        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
 <head>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Simples</title>
