@@ -54,20 +54,27 @@ $result = $stmt->get_result();
 
         .botao {
             display: block;
-            width: 100%;
+            width: 50%;
             margin: 12px 0;
-            padding: 14px;
+            padding: 16px;
             font-size: 19px;
-            background-color: #3498db;
+            background-color: #3437db;
             color: white;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.2s;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 40px;
+            color:#fff;
+            color:white !important;
         }
-
+a{
+    text-decoration: none !important;
+}
         .botao:hover {
-            background-color: #2980b9;
+            background-color: #294fb9;
         }
 
         .botao:active {
@@ -76,17 +83,17 @@ $result = $stmt->get_result();
 
 
         th {
-            background-color: #3498db;
+            background-color: #4d34db;
             color: white;
         }
 
         tr:nth-child(even) {
-            background-color: #797c9544;
+            background-color: #a7aff044;
 
         }
 
         tr {
-            background-color: #9e9fa877;
+            background-color: #8e93c177;
             padding: 100px !important;
         }
 
@@ -103,7 +110,7 @@ $result = $stmt->get_result();
             padding-right: 100px;
             text-align: center;
             overflow: hidden;
-            width: 100% !important;
+            width: 100% ;
 
 
         }
@@ -140,6 +147,57 @@ $result = $stmt->get_result();
             font-weight: bold;
            
         }
+         
+           
+
+@media (max-width: 768px) {
+  body {
+    padding: 0.8rem;
+  }
+
+  .todo {
+    padding: 0.9rem 0.8rem;
+    overflow-x: hidden;
+  }
+
+  table {
+    font-size: 1rem;
+  }
+
+  th, td {
+    padding: 0.9rem 0.6rem;
+  }
+
+  .foto {
+    width: 32px;
+    height: 32px;
+  }
+
+  .nome-coluna {
+    gap: 7px;
+    font-size: 0.80rem;
+    width:100px !important;
+  }
+
+  .ponto {
+    max-width: 0px !important;
+    font-size: 0.9rem !important;
+    width:0px !important;
+  }
+
+  td {
+    max-width: 19 !important;               
+  }
+  .botao{
+    
+            width: 60%;
+          
+  }
+  h1{
+    font-size:1.6rem;
+  }
+}
+
     </style>
 </head>
 
@@ -202,6 +260,7 @@ $result = $stmt->get_result();
                     </tbody>
                 </table>
             <?php endif; ?>
+           <a class="botao" href="index.php"  >Voltar Para o Menu</a>
         </div>
     </div>
     <?php
