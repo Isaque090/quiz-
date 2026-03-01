@@ -4,67 +4,68 @@ session_start();
 
 $texto = "";
 $imagem = "./img/foto-padrao.jpg";
-$caminho = "";
-if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
-    $ext = pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION);
-    $nome_arquivo = uniqid() . '.' . $ext;
-    $caminho = "./img/" . $nome_arquivo;
 
-    if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
-
-
-
-
-        $stmt = $conexao->prepare("UPDATE melhores SET img_perfil = ? WHERE nm_nome = ? LIMIT 1");
-        $stmt->bind_param("ss", $caminho, $_SESSION['nome']);
-        $stmt->execute();
-        $stmt->close();
-
-        $imagem = $caminho;
-    }
+if (isset($_SESSION['foto'])) {
+    $imagem = $_SESSION['foto'];
+}
+if (!isset($_SESSION['foto'])) {
+    $imagem = $_SESSION['foto'];
 }
 
-if (isset($_FILES['imagem'])) {
-    $stmt = $conexao->prepare("SELECT img_perfil FROM melhores WHERE nm_nome = ? LIMIT 1");
-    $stmt->bind_param("s", $_SESSION['nome']);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($row = $result->fetch_assoc()) {
-        if (!empty($row['img_perfil'])) {
-            $imagem = $row['img_perfil'];
+if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
+    $ext = strtolower(pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION));
+    $permitidos = ['jpg', 'jpeg', 'png', 'gif'];
+
+    if (in_array($ext, $permitidos)) {
+        $nome_arquivo = uniqid() . '.' . $ext;
+        $caminho = "./img/" . $nome_arquivo;
+
+        if (move_uploaded_file($_FILES['imagem']['tmp_name'], $caminho)) {
+           
+            $_SESSION['foto'] = $caminho;
+            $imagem = $caminho;
+        } else {
+            $texto = "<div class='erro'><p>Erro ao salvar a imagem no servidor</p></div>";
         }
+    } else {
+        $texto = "<div class='erro'><p>Apenas imagens JPG, JPEG, PNG ou GIF</p></div>";
     }
-    $stmt->close();
 }
 
 
 if (isset($_POST['noe'])) {
+    $nome = $_POST['nome'];
 
-    $_SESSION['nome'] = $_POST['nome'];
+  
+   
+        
+        $pesquisa = $conexao->prepare("SELECT nm_nome FROM melhores WHERE nm_nome = ? LIMIT 1");
+        $pesquisa->bind_param("s", $nome);
+        $pesquisa->execute();
+        $resultado = $pesquisa->get_result();
 
-    $nome = $_SESSION['nome'];
+        if ($resultado->num_rows > 0) {
+            $texto = "<div class='erro'><p>Este nome já está em uso</p></div>";
+        } else {
+           
+            $salvar_foto = $_SESSION['foto'] ;
 
+            $stmt = $conexao->prepare("INSERT INTO melhores (nm_nome, img_perfil) VALUES (?, ?)");
+            $stmt->bind_param("ss", $nome, $salvar_foto);
+$stmt->execute();
+                $_SESSION['nome'] = $nome;
+                $_SESSION['teste'] = 1;
 
-    $pesquisa = "SELECT * FROM melhores WHERE nm_nome='$nome' ";
-    $nomeprocurar = $conexao->query($pesquisa);
-    if ($nome === "") {
-        $texto = "<div class='erro'><p>Este nome já esta em uso</p></div>";
-    } else if (mysqli_num_rows($nomeprocurar) >= 1) {
-        $texto = "<div class='erro'><p>Este nome já esta em uso</p></div>";
+            
+                unset($_SESSION['foto']);
 
-    } else {
-
-        $stmt = $conexao->prepare("INSERT INTO Melhores(nm_nome, img_perfil) VALUES (?, ?)");
-        $stmt->bind_param("ss", $nome, $imagem);
-        $stmt->execute();
-
-        $_SESSION['nome'] = $_POST['nome'];
-
-        $nome = $_SESSION['nome'];
-        $_SESSION['teste'] = 1;
-        header('location:quiz.php');
-    }
-
+                header('Location: quiz.php');
+                exit;
+             
+            $stmt->close();
+        }
+        $pesquisa->close();
+    
 }
 ?>
 <!DOCTYPE html>
