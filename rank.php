@@ -27,18 +27,20 @@ $result = $stmt->get_result();
 
             background-color: #f4f4f9;
             margin: 0;
-            padding: 20px;
+           
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            color: #333;
+               flex-direction: column;
 
 
 
 
             text-align: center;
 
+            color: #000000;
+        
 
         }
 
@@ -49,6 +51,7 @@ $result = $stmt->get_result();
             padding: 30px;
             border-radius: 12px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            margin: 2rem auto;
             text-align: center;
         }
 
@@ -151,9 +154,7 @@ a{
            
 
 @media (max-width: 768px) {
-  body {
-    padding: 0.8rem;
-  }
+
 
   .todo {
     padding: 0.9rem 0.8rem;
@@ -199,15 +200,18 @@ a{
 }
 
 @media (max-width: 468px) {
-  body {
-    padding: 0.8rem;
-  }
 
   .todo {
     padding: 0.9rem 0.8rem;
     overflow-x: hidden;
   }
-
+ .botao {
+           
+            width: 70%;
+          
+            font-size: 17px;
+           
+        }
   table {
     font-size: 1rem;
   }
@@ -245,11 +249,28 @@ a{
     font-size:1.6rem;
   }
 }
+        footer {
+            background-color: black;
+            height: auto;
+            width: 100%;
+            margin-top: 90px;
 
+               padding: 1.5rem !important;
+      
+        }
+           footer i:hover {
+            text-shadow: 0px 0px 8px #ffffff;
+            transition: transform 0.4s ease;
+        }
+           footer i {
+           font-size:1.5rem;
+        }
     </style>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 
 <body>
+    <main>
     <div class="card todo">
         <div class="card-heder">
             <h1> Ranking - Top 10 Melhores Pontuações</h1>
@@ -308,9 +329,50 @@ a{
                     </tbody>
                 </table>
             <?php endif; ?>
+
+             <?php if ($result->num_rows === 0): ?>
+                       <td colspan="3" style="
+                    padding: 30px 10px;
+                    text-align: center;
+                    color: #777;
+                    font-size: 1.3rem;
+                    background: #f8f9fa;
+                ">
+                    <div>Não há nenhum registro ainda...</div>
+                    <small style="font-size: 1rem; opacity: 0.8;">
+                        Seja o primeiro a entrar no ranking!
+                    </small>
+                </td>
+
+                            
+
+                     
+                    </tbody>
+                </table>
+            <?php endif; ?>
            <a class="botao" href="index.php"  >Voltar Para o Menu</a>
         </div>
     </div>
+    </main>
+
+    
+      <footer class="bg-dark text-white py- " >
+        <div class="container text-center" style="margin-top:-15px;">
+            <h4 style="padding-top:20px;">Criado Por:</h4>
+            <p style="margin-top:-6px;">Isaque Severo
+                <a style="margin-left:5px;" href="https://github.com/Isaque090" target="_blank" class="text-white ">
+                    <i class="bi bi-github fs-4 "></i>
+                </a>
+            </p>
+
+
+
+        </div>
+        <div class="text-center ">
+            <small class="text-secondary ">&copy; 2026 Todos os direitos reservados.
+            </small>
+        </div>
+    </footer>
     <?php
 
 
