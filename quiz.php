@@ -12,7 +12,10 @@ if (!isset($_SESSION['certas'])) {
     $_SESSION['certas'] = 0;
 }
 
-  
+     if ( !isset($_SESSION['teste'])) {
+          header('location:index.php');  
+
+    } 
 
      if ( $_SESSION['teste'] === 0 ) {
           header('location:index.php');  
@@ -88,6 +91,60 @@ $perguntas = [
         'opcoes' => ['<ol>', '<ul>', '<li>', '<list>'],
         'correta' => 1
     ],
+    11 => [
+    'pergunta' => 'Qual tag HTML5 é usada para representar o cabeçalho de uma página ou seção?',
+    'opcoes' => ['<top>', '<header>', '<head>', '<hgroup>'],
+    'correta' => 1
+],
+12 => [
+    'pergunta' => 'Qual é a tag correta para criar um campo de entrada de senha em um formulário?',
+    'opcoes' => ['<input type="text">', '<input type="password">', '<input type="secret">', '<password>'],
+    'correta' => 1
+],
+13 => [
+    'pergunta' => 'Qual atributo HTML especifica que um campo de formulário é obrigatório?',
+    'opcoes' => ['required', 'mandatory', 'must', 'validate'],
+    'correta' => 0
+],
+14 => [
+    'pergunta' => 'Qual tag HTML5 representa o rodapé de uma página ou seção?',
+    'opcoes' => ['<bottom>', '<footer>', '<end>', '<foot>'],
+    'correta' => 1
+],
+15 => [
+    'pergunta' => 'Qual elemento HTML é semanticamente correto para colocar navegação principal do site?',
+    'opcoes' => ['<div class="nav">', '<navigation>', '<nav>', '<menu>'],
+    'correta' => 2
+],
+16 => [
+    'pergunta' => 'Qual tag HTML cria uma quebra de linha sem iniciar um novo parágrafo?',
+    'opcoes' => ['<br>', '<lb>', '<break>', '<newline>'],
+    'correta' => 0
+],17 => [
+    'pergunta' => 'Qual é o elemento HTML correto para representar um conteúdo independente que poderia ser reutilizado (como artigo de blog)?',
+    'opcoes' => ['<section>', '<div>', '<article>', '<content>'],
+    'correta' => 2
+],
+18 => [
+    'pergunta' => 'Qual atributo HTML define o caminho/nome do arquivo de uma imagem?',
+    'opcoes' => ['alt', 'title', 'src', 'href'],
+    'correta' => 2
+],
+19 => [
+    'pergunta' => 'Qual tag HTML5 é usada para agrupar conteúdo que tem cabeçalho e rodapé relacionados (como formulário ou tabela)?',
+    'opcoes' => ['<group>', '<fieldset>', '<section>', '<container>'],
+    'correta' => 1
+],
+20 => [
+    'pergunta' => 'Qual é a forma correta de criar um comentário em HTML?',
+    'opcoes' => [
+        '<!-- Isso é um comentário -->',
+        '// Isso é um comentário',
+        '/* Isso é um comentário */',
+        '<comment>Isso é um comentário</comment>'
+    ],
+    'correta' => 0
+],
 ];
 
 
@@ -95,7 +152,7 @@ if ($_SESSION['pergunta_atual'] >= count($perguntas)) {
 
 $_SESSION['nome'];
     $pontos = $_SESSION['certas']*10 ;
-
+$_SESSION['teste'] =0;
     
     $stmt = $conexao->prepare("UPDATE melhores SET pontuacao= ? WHERE nm_nome = ?");
 $stmt->bind_param("is",  $pontos,$_SESSION['nome']);  
@@ -243,6 +300,7 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
 <html lang="pt-br">
 
 <head>
+     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <meta charset="UTF-8">
@@ -251,19 +309,35 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
     <style>
         body {
 
-            background-color: #f4f4f9;
+          
             margin: 0;
-            padding: 20px;
+            padding-top: 30px ;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             color: #333;
-        }
 
+            
+           
+            
+           
+               flex-direction: column;
+
+
+
+
+            
+        }
+html, body {
+    height: 100%;             
+    margin: 0;
+}
         .todo {
             width: 100% !important;
-            max-width: 650px !important;
+           max-width: 650px;
+            min-width: 600px;
+
             background: white;
             padding: 30px;
             border-radius: 12px;
@@ -286,7 +360,7 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
         .botao {
             display: block;
             width: 100%;
-            margin: 12px 0;
+            margin: 14px 0;
             padding: 14px;
             font-size: 19px;
             background-color: #3498db;
@@ -308,7 +382,13 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
 
         @media (max-width: 500px) {
             .todo {
-                padding: 20px;
+               
+                           max-width: 370px !important;
+            min-width: 350px !important;
+            width:100% !important;
+              padding: 19px;
+           margin-top: 50px !important;
+
             }
 
             h2 {
@@ -318,12 +398,53 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
             p {
                 font-size: 1.1rem;
             }
+
+ 
+@media (max-width: 500px) and (max-height: 900px) {
+  body{
+  padding-top: 10% !important ; 
+}
+}
+
+@media (max-width: 500px) and (max-height: 800px) {
+         
+         
+body{
+  padding-top: 2% !important ; 
+}
+}
+        }
+        main{
+            flex: 1 0 auto;
+            display: flex;              
+    justify-content: center;
+    align-items: flex-start;   
+    padding: 50px 1px;      
+    width: 100%;
+
+        }
+
+        
+     footer {
+            background-color: black;
+           
+            width: 100%;
+            margin-top: auto;
+            padding: 1.5rem !important;
+            flex-shrink: 0;
+        }
+           footer i:hover {
+            text-shadow: 0px 0px 8px #ffffff;
+            transition: transform 0.4s ease;
+        }
+           footer i {
+           font-size:1.5rem;
         }
     </style>
 </head>
 
 <body>
-
+<main>
     <div class="card todo">
 
 
@@ -338,7 +459,24 @@ $p = $perguntas[$_SESSION['pergunta_atual']];
             <?php endforeach; ?>
         </form>
     </div>
+</main>
+      <footer class="bg-dark   text-white">
+        <div class="container text-center" style="margin-top:-15px;">
+            <h4 style="padding-top:20px;">Criado Por:</h4>
+            <p style="margin-top:-6px;">Isaque Severo
+                <a style="margin-left:5px;" href="https://github.com/Isaque090" target="_blank" class="text-white ">
+                    <i class="bi bi-github fs-4 "></i>
+                </a>
+            </p>
 
+
+
+        </div>
+        <div class="text-center ">
+            <small class="text-secondary ">&copy; 2026 Todos os direitos reservados.
+            </small>
+        </div>
+    </footer>
 </body>
 
 </html>
