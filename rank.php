@@ -198,6 +198,54 @@ a{
   }
 }
 
+@media (max-width: 468px) {
+  body {
+    padding: 0.8rem;
+  }
+
+  .todo {
+    padding: 0.9rem 0.8rem;
+    overflow-x: hidden;
+  }
+
+  table {
+    font-size: 1rem;
+  }
+
+  th, td {
+    padding: 0.9rem 0.6rem;
+  }
+
+  .foto {
+    width: 43px;
+    height: 43px;
+  }
+
+  .nome-coluna {
+    gap: 7px;
+    font-size: 0.9rem;
+    width:100px !important;
+  }
+
+  .ponto {
+    max-width: 0px !important;
+    font-size: 0.9rem !important;
+    width:0px !important;
+  }
+
+  td {
+    max-width: 19 !important;               
+  }
+  .botao{
+    
+            width: 60%;
+          
+  }
+  h1{
+    font-size:1.6rem;
+  }
+}
+
     </style>
 </head>
 
