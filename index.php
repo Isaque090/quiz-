@@ -1,16 +1,14 @@
 <?php
 include_once('config.php');
 session_start();
-
+   $_SESSION['teste']=0;
 $texto = "";
 $imagem = "./img/foto-padrao.jpg";
 
 if (isset($_SESSION['foto'])) {
     $imagem = $_SESSION['foto'];
 }
-if (!isset($_SESSION['foto'])) {
-    $imagem = $_SESSION['foto'];
-}
+
 
 if (isset($_FILES['imagem']) && $_FILES['imagem']['error'] == 0) {
     $ext = strtolower(pathinfo($_FILES['imagem']['name'], PATHINFO_EXTENSION));
@@ -48,12 +46,12 @@ if (isset($_POST['noe'])) {
             $texto = "<div class='erro'><p>Este nome já está em uso</p></div>";
         } else {
            
-            $salvar_foto = $_SESSION['foto'] ;
+            $salvar_foto = $_SESSION['foto'] ?? "./img/foto-padrao.jpg";
 
             $stmt = $conexao->prepare("INSERT INTO melhores (nm_nome, img_perfil) VALUES (?, ?)");
             $stmt->bind_param("ss", $nome, $salvar_foto);
-$stmt->execute();
-                $_SESSION['nome'] = $nome;
+if($stmt->execute()){
+ $_SESSION['nome'] = $nome;
                 $_SESSION['teste'] = 1;
 
             
@@ -61,6 +59,8 @@ $stmt->execute();
 
                 header('Location: quiz.php');
                 exit;
+}
+               
              
             $stmt->close();
         }
@@ -75,19 +75,21 @@ $stmt->execute();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
-            align-items: center;
-            justify-items: center;
-
-            min-height: 100vh;
-            background-color: #f4f4f9;
-
+         margin: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f9;
+    color: #333;
+    text-align: center;
         }
 
-        h1 {
-            padding-top: 50px;
-        }
+   
 
         .nome {
             align-items: center;
@@ -122,6 +124,7 @@ $stmt->execute();
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             text-align: center;
             align-items: center;
+             margin: 2rem auto;
         }
 
 
@@ -140,7 +143,14 @@ $stmt->execute();
             margin-right: auto;
             margin-left: auto;
         }
-
+.botao:disabled{
+      background-color: #88b4d1;
+      cursor:not-allowed;
+}
+.botao:disabled:hover{
+      background-color: #88b4d1;
+          cursor:not-allowed;
+}
         .botao:hover {
             background-color: #2980b9;
         }
@@ -170,7 +180,7 @@ $stmt->execute();
 
 
         }
-
+      
         .erro p {
 
             justify-items: center;
@@ -276,21 +286,12 @@ $stmt->execute();
                 width: 100px !important;
                 height: 100px !important;
 
-                border: 3px solid #000;
-                border-radius: 50px;
-
-            }
-
+                border: 3px solid #000;}
 
 
             .todo {
-                width: 75%;
-                background: white;
-                padding: 30px;
-                border-radius: 12px;
-                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-                text-align: center;
-                align-items: center;
+                width: 85%;
+              
             }
 
 
@@ -338,14 +339,34 @@ $stmt->execute();
 
 
         }
+main {
+            flex: 1 0 auto;               
+        }
+     footer {
+            background-color: black;
+           
+            width: 100%;
+            margin-top: auto;
+            padding: 1.5rem !important;
+            flex-shrink: 0;
+        }
+           footer i:hover {
+            text-shadow: 0px 0px 8px #ffffff;
+            transition: transform 0.4s ease;
+        }
+           footer i {
+           font-size:1.5rem;
+        }
     </style>
+   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
         integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 
 <body>
-    <h1>QUIZ</h1>
-    <div class="card todo">
+       <main>
+    
+           <div class="card todo"><div class="card-heder"><h1>QUIZ</div><div class="card-body ">
         <div class="perfil-container central ">
             <div class="foto-container">
                 <img class="foto" id="foto-perfil" src="<?php echo htmlspecialchars($imagem); ?>" alt="Foto de perfil">
@@ -368,13 +389,13 @@ $stmt->execute();
                 </form>
 
             </div>
-        </div>
+        </div></div>
 
         <div class="form-group nome">
             <form action="" method="post">
                 <label>Digite seu Nome (não precisa ser o real)</label>
-                <input class="form-control" name="nome" type="text" maxlength="20" required>
-                <button name="noe" class="botao" type="submit">Começar</button>
+                <input class="form-control" name="nome" type="text" id="iiinput" maxlength="20" required>
+                <button name="noe" id="botao" class="botao" type="submit">Começar</button>
             </form>
             <?php if ($texto != "") {
                 echo $texto;
@@ -382,7 +403,47 @@ $stmt->execute();
         </div>
     </div>
     </div>
-    <script>   document.getElementById('input-foto').addEventListener('change', function () {
+       </main>
+     
+
+
+
+      <footer class="bg-dark text-white  ">
+        <div class="container text-center" style="margin-top:-15px;">
+            <h4 style="padding-top:20px;">Criado Por:</h4>
+            <p style="margin-top:-6px;">Isaque Severo
+                <a style="margin-left:5px;" href="https://github.com/Isaque090" target="_blank" class="text-white ">
+                    <i class="bi bi-github fs-4 "></i>
+                </a>
+            </p>
+
+
+
+        </div>
+        <div class="text-center ">
+            <small class="text-secondary ">&copy; 2026 Todos os direitos reservados.
+            </small>
+        </div>
+    </footer>
+
+    <script>
+const botao =document.getElementById('botao');    
+
+     
+     $('#iiinput').on('keyup', function () {
+             let nome = $(this).val();
+             if (nome.length > 20) {
+   botao.disabled = true;
+    
+
+        }
+        else{
+             botao.disabled = false;
+        }
+   
+    
+    });
+    document.getElementById('input-foto').addEventListener('change', function () {
             if (this.files && this.files.length > 0) {
                 document.getElementById('form-foto').submit();
             }
